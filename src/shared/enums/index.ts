@@ -1,0 +1,17 @@
+export enum PermissionEnum {
+  DELETE_COMP = 'd_empr',
+  CREATE_COMP = 'c_empr',
+  EDIT_COMP = 'e_empr',
+  EDIT_PLAN = 'e_plan',
+  DELETE_PLAN = 'd_plan',
+  CREATE_PLAN = 'c_plan',
+  DELETE_USER = 'd_usua',
+  CREATE_USER = 'c_usua',
+  EDIT_USER = 'e_usua',
+  DELETE_TEMP = 'd_temp',
+  CREATE_TEMP = 'c_temp',
+  EDIT_TEMP = 'e_temp',
+  DELETE_ROLE = 'd_nive',
+  CREATE_ROLE = 'c_nive',
+  EDIT_ROLE = 'e_nive',
+}

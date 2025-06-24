@@ -1,0 +1,146 @@
+import { Field, ObjectType } from '@nestjs/graphql';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { AbstractEntity } from 'src/database/abstract/abstractEntity.entity';
+import { IsValidCPFOrCNPJ } from 'src/shared/decorators/isValidCPFOrCNPJ.decorator';
+import { UnformatNumbers } from 'src/shared/decorators/unformatNumbers';
+import { Column, DeleteDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Role } from '../roles/role.entity';
+import { Company } from '../companies/company.entity';
+
+@Entity({ name: 'users', schema: 'core' })
+@ObjectType()
+@Index('unique_email_active_users', ['email'], { where: '"deletedAt" IS NULL', unique: true })
+@Index('unique_cpf_active_users', ['cpf'], { where: '"deletedAt" IS NULL', unique: true })
+export class User extends AbstractEntity {
+  @Column({ type: 'varchar', length: 255 })
+  @IsNotEmpty({ message: 'Nome é obrigatório.' })
+  @IsString({ message: 'Nome deve ser uma string.' })
+  @Field()
+  name: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  @IsNotEmpty({ message: 'Senha é obrigatória.' })
+  @IsString({ message: 'Senha deve ser uma string.' })
+  @IsOptional()
+  @Field({ nullable: true })
+  password: string;
+
+  @Column({ type: 'varchar', length: 300, unique: true })
+  @IsNotEmpty({ message: 'E-mail é obrigatório.' })
+  @IsString({ message: 'Email deve ser uma string.' })
+  @Field()
+  email: string;
+
+  @Column({ type: 'varchar', length: 20, unique: true })
+  @IsNotEmpty({ message: 'CPF é obrigatório.' })
+  @IsString({ message: 'CPF deve ser uma string.' })
+  @IsValidCPFOrCNPJ('CPF', { message: 'CPF inválido.' })
+  @UnformatNumbers()
+  @Field()
+  cpf: string;
+
+  @Column({ type: 'varchar', length: 20 })
+  @IsNotEmpty({ message: 'Telefone é obrigatório.' })
+  @IsString({ message: 'Telefone deve ser uma string.' })
+  @UnformatNumbers()
+  @Field()
+  telephone: string;
+
+  @Column({ type: 'varchar', length: 20 })
+  @IsNotEmpty({ message: 'CEP é obrigatório.' })
+  @IsString({ message: 'CEP deve ser uma string.' })
+  @UnformatNumbers()
+  @Field()
+  cep: string;
+
+  @Column({ type: 'varchar', length: 40 })
+  @IsNotEmpty({ message: 'País é obrigatório.' })
+  @IsString({ message: 'País deve ser uma string.' })
+  @Field()
+  country: string;
+
+  @Column({ type: 'varchar', length: 10 })
+  @IsNotEmpty({ message: 'Estado é obrigatório.' })
+  @IsString({ message: 'Estado deve ser uma string.' })
+  @Field()
+  state: string;
+
+  @Column({ type: 'varchar', length: 30 })
+  @IsNotEmpty({ message: 'Cidade é obrigatório.' })
+  @IsString({ message: 'Cidade deve ser uma string.' })
+  @Field()
+  city: string;
+
+  @Column({ type: 'varchar', length: 50 })
+  @IsNotEmpty({ message: 'Bairro é obrigatório.' })
+  @IsString({ message: 'Bairro deve ser uma string.' })
+  @Field()
+  neighborhood: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  @IsNotEmpty({ message: 'Rua é obrigatório.' })
+  @IsString({ message: 'Rua deve ser uma string.' })
+  @Field()
+  street: string;
+
+  @Column({ type: 'varchar', length: 10 })
+  @IsNotEmpty({ message: 'Número é obrigatório.' })
+  @IsString({ message: 'Número deve ser uma string.' })
+  @Field()
+  number: string;
+
+  @Column({ type: 'varchar', length: 1000, nullable: true, default: null })
+  refreshToken: string | null;
+
+  @Column({ type: 'varchar', length: 500, nullable: true, default: null })
+  definePasswordPath: string | null;
+
+  @Column({ type: 'varchar', length: 10, nullable: true, default: null })
+  passwordResetToken: string | null;
+
+  @Column({ type: 'timestamp', nullable: true, default: null })
+  passwordResetTokenExpiresAt: Date | null;
+
+  @Column({ type: 'boolean', default: false })
+  @Field(() => Boolean, { defaultValue: false })
+  twoFa: boolean;
+
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
+  twoFASecret: string;
+
+  @Column({ type: 'timestamptz', nullable: true, default: null })
+  emailVerifiedAt: Date | null;
+
+  @Column({ type: 'varchar', nullable: true, default: null, length: 30 })
+  emailVerificationToken: string | null;
+
+  @Column({ type: 'timestamptz', nullable: true, default: null })
+  emailVerificationTokenExpiresAt: Date | null;
+
+  @Column({ type: 'boolean', default: true })
+  @Field(() => Boolean, { defaultValue: true })
+  isActive: boolean;
+
+  @DeleteDateColumn()
+  @Field(() => Date, { nullable: true })
+  deletedAt: Date | null;
+
+  @Column({ type: 'int', unsigned: true })
+  @IsNumber({}, { message: 'roleId deve ser um número.' })
+  @IsNotEmpty({ message: 'roleId é obrigatório.' })
+  @Field(() => Number)
+  roleId: number;
+
+  @ManyToOne(() => Role, (role) => role.users)
+  @JoinColumn({ name: 'roleId', referencedColumnName: 'id' })
+  @Field(() => Role)
+  role: Role;
+
+  @OneToMany(() => Company, (c) => c.createdBy)
+  @Field(() => [Company])
+  companies: Company[];
+}

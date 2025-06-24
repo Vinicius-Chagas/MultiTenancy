@@ -1,0 +1,337 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Company {
+  cep: String!
+  city: String!
+  country: String!
+  createdAt: DateTime!
+  createdBy: User!
+  createdById: Float!
+  document: String!
+  email: String!
+  id: Int!
+  name: String!
+  neighborhood: String!
+  number: String!
+  state: String!
+  street: String!
+  subdomain: String!
+  telephone: String!
+  type: CompanyType!
+  updatedAt: DateTime!
+}
+
+enum CompanyType {
+  PF
+  PJ
+}
+
+input CreateCompanyInput {
+  cep: String!
+  city: String!
+  country: String!
+  createdById: Float!
+  document: String!
+  email: String!
+  name: String!
+  neighborhood: String!
+  number: String!
+  state: String!
+  street: String!
+  subdomain: String!
+  telephone: String!
+  type: CompanyType!
+}
+
+input CreateDepartmentInput {
+  description: String!
+  name: String!
+}
+
+input CreateRoleInput {
+  description: String!
+  name: String!
+  permissionsIds: [Float!]!
+  status: RoleStatus!
+}
+
+input CreateUserInput {
+  cep: String!
+  city: String!
+  country: String!
+  cpf: String!
+  email: String!
+  name: String!
+  neighborhood: String!
+  number: String!
+  roleId: Float!
+  state: String!
+  street: String!
+  telephone: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Department {
+  createdAt: DateTime!
+  description: String!
+  id: Int!
+  name: String!
+  updatedAt: DateTime!
+}
+
+type MetaDataOutput {
+  limit: Int
+  page: Int
+  totalCount: Int
+  totalPages: Int
+}
+
+type Mutation {
+  createCompany(company: CreateCompanyInput!): Company!
+  createDepartment(department: CreateDepartmentInput!): Department!
+  createRole(role: CreateRoleInput!): Role!
+  createUser(user: CreateUserInput!): User!
+  definePassword(password: definePasswordInput!): Boolean!
+  deleteCompany(id: Int!): Boolean!
+  deleteDepartment(id: Int!): Boolean!
+  deleteManyCompanies(ids: [Int!]!): Boolean!
+  deleteManyDepartments(ids: [Int!]!): Boolean!
+  deleteManyRoles(ids: [Int!]!): Boolean!
+  deleteManyUsers(ids: [Int!]!): Boolean!
+  deleteRole(id: Int!): Boolean!
+  deleteUser(id: Int!): Boolean!
+  forgotPassword(email: String!): String!
+  refreshToken(refresh_token: String!): SignInOutput!
+  resetPassword(newPassword: String!, token: String!): String!
+  setUp2FA(credentials: SetUp2FAInput!): Setup2FAOutput!
+  signIn(credentials: SignInInput!): SignInOutput!
+  signIn2FA(credentials: twoFAInput!): SignInOutput!
+  updateCompany(company: UpdateCompanyInput!, id: Int!): Boolean!
+  updateDepartment(department: UpdateDepartmentInput!, id: Int!): Boolean!
+  updateRole(id: Int!, role: UpdateRoleInput!): Boolean!
+  updateUser(id: Int!, user: UpdateUserInput!): Boolean!
+  updateWorkspace(id: Int!, workspace: UpdateWorkspaceInput!): Boolean!
+  validateForgotPasswordToken(token: String!): ValidateTokenOutput!
+  validateToken(token: String!): ValidateTokenOutput!
+}
+
+type PagiantedWorkspaces {
+  items: [Workspace!]!
+  meta: MetaDataOutput!
+}
+
+type PaginatedDepartments {
+  items: [Department!]!
+  meta: MetaDataOutput!
+}
+
+type PaginatedRoles {
+  items: [Role!]!
+  meta: MetaDataOutput!
+}
+
+type Paginatedusers {
+  items: [User!]!
+  meta: MetaDataOutput!
+}
+
+input PaginationInput {
+  limit: Int = 10
+  order: String = "ASC"
+  page: Int = 1
+  search: String = null
+}
+
+type Permission {
+  createdAt: DateTime!
+  description: String!
+  id: Int!
+  name: String!
+  roles: [Role!]!
+  slug: String!
+  updatedAt: DateTime!
+}
+
+type Query {
+  findAllCompanies(paginate: PaginationInput!): paginatedCompany!
+  findAllDepartments(paginate: PaginationInput!): PaginatedDepartments!
+  findAllPermissions: [Permission!]!
+  findAllRoles(paginate: PaginationInput!): PaginatedRoles!
+  findAllUsers(paginate: PaginationInput!): Paginatedusers!
+  findAllWorkspaces(paginate: PaginationInput!): PagiantedWorkspaces!
+  findOneByDefinePasswordPath(path: String!): User!
+  findOneCompany(id: Int!): Company!
+  findOneDepartment(id: Int!): Department!
+  findOnePermission(id: Int!): Permission!
+  findOneRole(id: Int!): Role!
+  findOneUser(id: Int!): User!
+  findOneWorkspace(id: Int!): Workspace!
+}
+
+type Role {
+  createdAt: DateTime!
+  description: String!
+  id: Int!
+  name: String!
+  permissions: [Permission!]!
+  status: RoleStatus!
+  updatedAt: DateTime!
+  users: [User!]!
+}
+
+enum RoleStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  SUSPENDED
+}
+
+input SetUp2FAInput {
+  twoFAType: String! = "googleAuthenticator"
+  userId: Float!
+}
+
+type Setup2FAOutput {
+  qrCodeUrl: String
+  success: Boolean!
+}
+
+input SignInInput {
+  email: String
+  password: String
+}
+
+type SignInOutput {
+  refresh_token: String
+  requiresTwoFactor: Boolean
+  token: String
+  twoFAToken: String
+}
+
+input UpdateCompanyInput {
+  cep: String
+  city: String
+  country: String
+  createdById: Float
+  document: String
+  email: String
+  name: String
+  neighborhood: String
+  number: String
+  state: String
+  street: String
+  subdomain: String
+  telephone: String
+  type: CompanyType
+}
+
+input UpdateDepartmentInput {
+  description: String
+  name: String
+}
+
+input UpdateRoleInput {
+  description: String
+  name: String
+  permissionsIds: [Float!]
+  status: RoleStatus
+}
+
+input UpdateUserInput {
+  cep: String
+  city: String
+  country: String
+  cpf: String
+  email: String
+  name: String
+  neighborhood: String
+  number: String
+  roleId: Float
+  state: String
+  street: String
+  telephone: String
+}
+
+input UpdateWorkspaceInput {
+  activationStatus: WorkspaceActivationStatus
+  companyId: Float
+  customDomain: String
+  databaseSchema: String
+  displayName: String
+  logoUrl: String = null
+  subdomain: String
+  workspaceMemberCount: Float = 1
+}
+
+type User {
+  cep: String!
+  city: String!
+  companies: [Company!]!
+  country: String!
+  cpf: String!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  email: String!
+  id: Int!
+  isActive: Boolean!
+  name: String!
+  neighborhood: String!
+  number: String!
+  password: String
+  role: Role!
+  roleId: Float!
+  state: String!
+  street: String!
+  telephone: String!
+  twoFa: Boolean!
+  updatedAt: DateTime!
+}
+
+type ValidateTokenOutput {
+  error: String
+  isValid: Boolean!
+}
+
+type Workspace {
+  activationStatus: WorkspaceActivationStatus!
+  companyId: Float!
+  createdAt: DateTime!
+  customDomain: String!
+  databaseSchema: String!
+  displayName: String!
+  id: Int!
+  logoUrl: String
+  subdomain: String!
+  updatedAt: DateTime!
+  workspaceMemberCount: Float!
+}
+
+enum WorkspaceActivationStatus {
+  ACTIVE
+  CANCELED
+  INACTIVE
+  ONGOING_CREATION
+  PENDING_ACTIVATION
+  SUSPENDED
+}
+
+input definePasswordInput {
+  id: Int!
+  password: String
+}
+
+type paginatedCompany {
+  items: [Company!]!
+  meta: MetaDataOutput!
+}
+
+input twoFAInput {
+  authToken: String!
+  twoFAToken: String!
+}

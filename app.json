@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "09debd0b-8e08-4341-af82-3abc8886c35c"
+      }
+    },
+    "android": {
+      "package": "com.vinicius.chagas.mausoleu"
+    }
+  }
+}
