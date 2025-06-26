@@ -1,7 +1,5 @@
-import { Field, InputType, OmitType } from '@nestjs/graphql';
-import { User } from '../user.entity';
-import { CreateDashboardProfileInput } from 'src/modules/dashboard_profile/dto/createDashboardProfile';
-import { IsOptional } from 'class-validator';
+import { InputType, OmitType } from '@nestjs/graphql';
+import { User } from '../workspaceMember';
 
 @InputType()
 export class CreateUserInput extends OmitType(
@@ -15,6 +13,7 @@ export class CreateUserInput extends OmitType(
     'passwordResetTokenExpiresAt',
     'emailVerificationToken',
     'emailVerificationTokenExpiresAt',
+    'isActive',
     'twoFa',
     'twoFASecret',
     'refreshToken',
@@ -23,11 +22,6 @@ export class CreateUserInput extends OmitType(
     'password',
     'definePasswordPath',
     'deletedAt',
-    'dashboardProfile',
   ],
   InputType,
-) {
-  @IsOptional()
-  @Field(() => CreateDashboardProfileInput, { nullable: true })
-  dashboardProfile?: CreateDashboardProfileInput;
-}
+) {}

@@ -2,9 +2,10 @@
 https://docs.nestjs.com/modules
 */
 
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { QueryOptimizerService } from './queryoptimizer.service';
 
+@Global()
 @Module({
   providers: [QueryOptimizerService],
   exports: [QueryOptimizerService],

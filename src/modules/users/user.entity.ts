@@ -3,9 +3,19 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { AbstractEntity } from 'src/database/abstract/abstractEntity.entity';
 import { IsValidCPFOrCNPJ } from 'src/shared/decorators/isValidCPFOrCNPJ.decorator';
 import { UnformatNumbers } from 'src/shared/decorators/unformatNumbers';
-import { Column, DeleteDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { Role } from '../roles/role.entity';
 import { Company } from '../companies/company.entity';
+import { DashboardProfile } from '../dashboard_profile/dashboard_profile.entity';
 
 @Entity({ name: 'users', schema: 'core' })
 @ObjectType()
@@ -38,56 +48,6 @@ export class User extends AbstractEntity {
   @UnformatNumbers()
   @Field()
   cpf: string;
-
-  @Column({ type: 'varchar', length: 20 })
-  @IsNotEmpty({ message: 'Telefone é obrigatório.' })
-  @IsString({ message: 'Telefone deve ser uma string.' })
-  @UnformatNumbers()
-  @Field()
-  telephone: string;
-
-  @Column({ type: 'varchar', length: 20 })
-  @IsNotEmpty({ message: 'CEP é obrigatório.' })
-  @IsString({ message: 'CEP deve ser uma string.' })
-  @UnformatNumbers()
-  @Field()
-  cep: string;
-
-  @Column({ type: 'varchar', length: 40 })
-  @IsNotEmpty({ message: 'País é obrigatório.' })
-  @IsString({ message: 'País deve ser uma string.' })
-  @Field()
-  country: string;
-
-  @Column({ type: 'varchar', length: 10 })
-  @IsNotEmpty({ message: 'Estado é obrigatório.' })
-  @IsString({ message: 'Estado deve ser uma string.' })
-  @Field()
-  state: string;
-
-  @Column({ type: 'varchar', length: 30 })
-  @IsNotEmpty({ message: 'Cidade é obrigatório.' })
-  @IsString({ message: 'Cidade deve ser uma string.' })
-  @Field()
-  city: string;
-
-  @Column({ type: 'varchar', length: 50 })
-  @IsNotEmpty({ message: 'Bairro é obrigatório.' })
-  @IsString({ message: 'Bairro deve ser uma string.' })
-  @Field()
-  neighborhood: string;
-
-  @Column({ type: 'varchar', length: 255 })
-  @IsNotEmpty({ message: 'Rua é obrigatório.' })
-  @IsString({ message: 'Rua deve ser uma string.' })
-  @Field()
-  street: string;
-
-  @Column({ type: 'varchar', length: 10 })
-  @IsNotEmpty({ message: 'Número é obrigatório.' })
-  @IsString({ message: 'Número deve ser uma string.' })
-  @Field()
-  number: string;
 
   @Column({ type: 'varchar', length: 1000, nullable: true, default: null })
   refreshToken: string | null;
@@ -123,7 +83,7 @@ export class User extends AbstractEntity {
 
   @Column({ type: 'boolean', default: true })
   @Field(() => Boolean, { defaultValue: true })
-  isActive: boolean;
+  is_dashboard_user: boolean;
 
   @DeleteDateColumn()
   @Field(() => Date, { nullable: true })
@@ -143,4 +103,7 @@ export class User extends AbstractEntity {
   @OneToMany(() => Company, (c) => c.createdBy)
   @Field(() => [Company])
   companies: Company[];
+
+  @OneToOne(() => DashboardProfile, (d) => d.user)
+  dashboardProfile: DashboardProfile;
 }

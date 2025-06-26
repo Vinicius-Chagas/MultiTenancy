@@ -1,4 +1,4 @@
-import { Module, OnApplicationBootstrap } from '@nestjs/common';
+import { Global, Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
@@ -8,6 +8,7 @@ import { CoreSeedingService } from 'src/modules/seeding/core.seed.service';
 import { TenantSeedingService } from 'src/modules/seeding/tenan.seed.service';
 import { RequestContextService } from './requestContext.service';
 
+@Global()
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
