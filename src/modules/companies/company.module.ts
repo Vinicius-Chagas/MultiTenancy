@@ -4,11 +4,10 @@ import { CompanyService } from './company.service';
 import { Module } from '@nestjs/common';
 import { Company } from './company.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { QueryOptimizerModule } from '../QueryOptimizer/queryoptimizer.module';
-import { DatabaseModule } from 'src/database/database.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Company]), DatabaseModule, QueryOptimizerModule],
+  imports: [TypeOrmModule.forFeature([Company]), UsersModule],
   providers: [CompanyService, CompanyResolver, RepositoryInjectionProvider(Company)],
   exports: [CompanyService],
 })

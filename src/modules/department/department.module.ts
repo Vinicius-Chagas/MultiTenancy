@@ -1,7 +1,5 @@
 import { Module, Scope } from '@nestjs/common';
 import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm';
-import { QueryOptimizerModule } from '../QueryOptimizer/queryoptimizer.module';
-import { DatabaseModule } from 'src/database/database.module';
 import { PermissionModule } from '../permissions/permission.module';
 import { Department } from './department.entity';
 import { DepartmentService } from './department.service';
@@ -12,12 +10,7 @@ import { BaseRepository } from 'src/database/base-repository';
 import { DEPARTMENT_REPOSITORY } from './const';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Department]),
-    PermissionModule,
-    DatabaseModule,
-    QueryOptimizerModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Department]), PermissionModule],
   providers: [
     DepartmentService,
     DepartmentResolver,

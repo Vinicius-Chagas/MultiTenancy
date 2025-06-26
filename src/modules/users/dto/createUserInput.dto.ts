@@ -18,7 +18,6 @@ export class CreateUserInput extends OmitType(
     'twoFa',
     'twoFASecret',
     'refreshToken',
-    'role',
     'companies',
     'password',
     'definePasswordPath',

@@ -14,6 +14,7 @@ import { PaginationInput } from 'src/shared/dto/paginationInput.dto';
 import { CustomErrors } from 'src/shared/errors/customErrors';
 import { paginatedCompany } from './dto/paginatedCompany.output';
 import { In } from 'typeorm';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class CompanyService {
@@ -21,6 +22,7 @@ export class CompanyService {
   constructor(
     @InjectRepository(Company) private companyRepository: BaseRepository<Company>,
     private queryOptimizer: QueryOptimizerService,
+    private readonly userService: UsersService,
   ) {}
 
   async findAll(paginate: PaginationInput, info: GraphQLResolveInfo): Promise<paginatedCompany> {
@@ -72,7 +74,13 @@ export class CompanyService {
 
   async create(company: CreateCompanyInput): Promise<Company> {
     return this.errorHandler.handleServiceMethod(async () => {
-      return await this.companyRepository.save(company);
+      const newCompany = await this.companyRepository.save(company);
+      await this.userService.create({
+        name: company.name,
+        email: company.email,
+        cpf: company.document,
+      });
+      return newCompany;
     }, 'create');
   }
 

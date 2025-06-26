@@ -3,11 +3,10 @@ import { IsNotEmpty, IsNumber } from 'class-validator';
 import { AbstractEntity } from 'src/database/abstract/abstractEntity.entity';
 import { Column, DeleteDateColumn, Entity, Index } from 'typeorm';
 
-@Entity({ name: 'users', schema: 'core' })
+@Entity({ name: 'workspace_members' })
 @ObjectType()
-@Index('unique_email_active_users', ['email'], { where: '"deletedAt" IS NULL', unique: true })
-@Index('unique_cpf_active_users', ['cpf'], { where: '"deletedAt" IS NULL', unique: true })
-export class workspaceMembers extends AbstractEntity {
+@Index('userId', ['userId'], { where: '"deletedAt" IS NULL', unique: true })
+export class workspaceMember extends AbstractEntity {
   @DeleteDateColumn()
   @Field(() => Date, { nullable: true })
   deletedAt: Date | null;

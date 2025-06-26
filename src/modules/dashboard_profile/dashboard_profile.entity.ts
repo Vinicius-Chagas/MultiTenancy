@@ -1,9 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { AbstractEntity } from 'src/database/abstract/abstractEntity.entity';
 import { UnformatNumbers } from 'src/shared/decorators/unformatNumbers';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { User } from '../users/user.entity';
+import { Role } from '../roles/role.entity';
 
 @Entity({ name: 'dashboard_profile', schema: 'core' })
 @ObjectType()
@@ -62,6 +63,17 @@ export class DashboardProfile extends AbstractEntity {
   @Field(() => Number)
   @IsNotEmpty({ message: 'ID do usuário é obrigatório.' })
   userId: number;
+
+  @Column({ type: 'int', unsigned: true })
+  @IsNumber({}, { message: 'roleId deve ser um número.' })
+  @IsNotEmpty({ message: 'roleId é obrigatório.' })
+  @Field(() => Number)
+  roleId: number;
+
+  @ManyToOne(() => Role, (role) => role.dashboardProfile)
+  @JoinColumn({ name: 'roleId', referencedColumnName: 'id' })
+  @Field(() => Role)
+  role: Role;
 
   @OneToOne(() => User, (u) => u.dashboardProfile, { nullable: true })
   @JoinColumn({ name: 'userId' })

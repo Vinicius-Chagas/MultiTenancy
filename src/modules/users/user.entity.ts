@@ -1,19 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { AbstractEntity } from 'src/database/abstract/abstractEntity.entity';
 import { IsValidCPFOrCNPJ } from 'src/shared/decorators/isValidCPFOrCNPJ.decorator';
 import { UnformatNumbers } from 'src/shared/decorators/unformatNumbers';
-import {
-  Column,
-  DeleteDateColumn,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
-import { Role } from '../roles/role.entity';
+import { Column, DeleteDateColumn, Entity, Index, OneToMany, OneToOne } from 'typeorm';
 import { Company } from '../companies/company.entity';
 import { DashboardProfile } from '../dashboard_profile/dashboard_profile.entity';
 
@@ -81,29 +71,15 @@ export class User extends AbstractEntity {
   @Column({ type: 'timestamptz', nullable: true, default: null })
   emailVerificationTokenExpiresAt: Date | null;
 
-  @Column({ type: 'boolean', default: true })
-  @Field(() => Boolean, { defaultValue: true })
-  is_dashboard_user: boolean;
-
   @DeleteDateColumn()
   @Field(() => Date, { nullable: true })
   deletedAt: Date | null;
-
-  @Column({ type: 'int', unsigned: true })
-  @IsNumber({}, { message: 'roleId deve ser um número.' })
-  @IsNotEmpty({ message: 'roleId é obrigatório.' })
-  @Field(() => Number)
-  roleId: number;
-
-  @ManyToOne(() => Role, (role) => role.users)
-  @JoinColumn({ name: 'roleId', referencedColumnName: 'id' })
-  @Field(() => Role)
-  role: Role;
 
   @OneToMany(() => Company, (c) => c.createdBy)
   @Field(() => [Company])
   companies: Company[];
 
-  @OneToOne(() => DashboardProfile, (d) => d.user)
-  dashboardProfile: DashboardProfile;
+  @OneToOne(() => DashboardProfile, (d) => d.user, { cascade: true, eager: true, nullable: true })
+  @Field(() => DashboardProfile, { nullable: true })
+  dashboardProfile?: DashboardProfile;
 }

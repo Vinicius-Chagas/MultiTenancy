@@ -21,8 +21,6 @@ export class TokenRoleDto extends PickType(Role, ['name']) {
 }
 
 export class TokenUserDto extends OmitType(User, [
-  'roleId',
-  'role',
   'companies',
   'createdAt',
   'updatedAt',
@@ -32,7 +30,6 @@ export class TokenUserDto extends OmitType(User, [
   'passwordResetTokenExpiresAt',
   'emailVerificationToken',
   'emailVerificationTokenExpiresAt',
-  'isActive',
   'twoFASecret',
   'definePasswordPath',
 ]) {
@@ -45,6 +42,6 @@ export class TokenUserDto extends OmitType(User, [
     this.twoFa = user.twoFa;
     this.refreshToken = user.refreshToken ?? null;
     this.password = user.password;
-    this.role = new TokenRoleDto(user.role);
+    this.role = new TokenRoleDto(user.dashboardProfile?.role || new Role());
   }
 }

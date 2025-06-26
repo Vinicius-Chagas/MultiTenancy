@@ -1,10 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, DeleteDateColumn, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { Permission } from '../permissions/permission.entity';
-import { User } from '../users/user.entity';
 import { RoleStatus } from './enum';
 import { IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
 import { AbstractEntity } from 'src/database/abstract/abstractEntity.entity';
+import { DashboardProfile } from '../dashboard_profile/dashboard_profile.entity';
 
 @Entity({ name: 'roles', schema: 'core' })
 @ObjectType()
@@ -40,7 +40,7 @@ export class Role extends AbstractEntity {
   @Field(() => [Permission])
   permissions: Permission[];
 
-  @OneToMany(() => User, (user) => user.role)
-  @Field(() => [User])
-  users: User[];
+  @OneToMany(() => DashboardProfile, (d) => d.role)
+  @Field(() => [DashboardProfile])
+  dashboardProfile: DashboardProfile[];
 }

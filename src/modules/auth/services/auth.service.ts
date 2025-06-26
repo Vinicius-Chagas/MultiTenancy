@@ -63,16 +63,9 @@ export class AuthService {
         throw this.errorHandler.unauthorized('Código 2FA inválido');
       }
 
-      const ommitedUser = omit(user, [
-        'password',
-        'refreshToken',
-        'definePasswordPath',
-        'passwordResetToken',
-        'passwordResetTokenExpiresAt',
-        'twoFASecret',
-        'emailVerificationToken',
-        'emailVerificationTokenExpiresAt',
-      ]);
+      const userToken = new TokenUserDto(user);
+
+      const ommitedUser = omit(userToken, ['password', 'refreshToken']);
 
       const tokens = await this.tokenService.generateAuthTokens({ user: ommitedUser });
 

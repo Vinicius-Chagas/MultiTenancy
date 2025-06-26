@@ -24,6 +24,7 @@ import { genSalt, hash } from 'bcrypt';
 import { RoleService } from '../roles/role.service';
 import { TokenUserDto } from 'src/shared/dto/tokenUserOutput.dto';
 import { In } from 'typeorm';
+import { DashboardProfile } from '../dashboard_profile/dashboard_profile.entity';
 
 @Injectable()
 export class UsersService {
@@ -60,8 +61,10 @@ export class UsersService {
         where: { id },
         ...opt,
         relations: {
-          role: {
-            permissions: true,
+          dashboardProfile: {
+            role: {
+              permissions: true,
+            },
           },
         },
       });
@@ -87,8 +90,10 @@ export class UsersService {
           password: true,
         },
         relations: {
-          role: {
-            permissions: true,
+          dashboardProfile: {
+            role: {
+              permissions: true,
+            },
           },
         },
       });
@@ -148,6 +153,10 @@ export class UsersService {
     return this.errorHandler.handleServiceMethod(async () => {
       const definePasswordPath = randomUUID();
       const newUser = this.usersRepository.create({ ...user, definePasswordPath });
+      if (user.dashboardProfile) {
+        newUser.dashboardProfile = new DashboardProfile();
+        Object.assign(newUser.dashboardProfile, user.dashboardProfile);
+      }
       const createdUser = await this.usersRepository.save(newUser);
       await this.mailBuilderFactory
         .create()
